@@ -6,14 +6,14 @@
 /*   By: vs <vs@student.42.fr>                        +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/10 10:42:47 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/14 13:26:56 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/14 14:37:45 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdlib.h>
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 2
+#define BUFFER_SIZE 20
 #endif
 
 size_t	ft_strlen(const char *c)
@@ -104,13 +104,14 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 /// @param new_line the line that GNL returns
 /// @param i position of the \n
 /// @return ???
-char *split_the_buf(char *buf, char *new_line, size_t i)
+char *split_the_buf_to_store_in_static(char *buf, size_t i)
 {
-	char *before_new_line;
+	return (ft_substr(buf, i, BUFFER_SIZE - i + 1));
+}
 
-	before_new_line = ft_substr(buf, 0, i);
-	new_line = ft_strjoin(new_line, before_new_line);
-	return (ft_substr(buf, i, BUFFER_SIZE - i));
+char *extra(char *buf, size_t i)
+{
+	return (ft_substr(buf, 0, i + 1));
 }
 
 int	ft_strchr(char *s, int c)
@@ -154,6 +155,7 @@ char *get_next_line(int fd)
 	size_t		i;
 	int			trigger;
 	char		*new_line;
+	//char		*extra;
 	
 	trigger = 1;
 	i = 0;
@@ -169,7 +171,9 @@ char *get_next_line(int fd)
 		if (ft_strchr(buf, 10) != 0)
 		{
 			i = ft_strchr(buf, 10);
-			buffer = split_the_buf(buf, new_line, i);
+			;
+			buffer = split_the_buf_to_store_in_static(buf, i);
+			new_line = ft_strjoin(new_line, extra(buf, i));
 			break;
 		}
 		new_line = ft_strjoin(new_line, buf);
