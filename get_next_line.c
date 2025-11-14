@@ -6,14 +6,14 @@
 /*   By: vs <vs@student.42.fr>                        +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/10 10:42:47 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/14 14:37:45 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/14 18:21:49 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdlib.h>
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 20
+#define BUFFER_SIZE 15
 #endif
 
 size_t	ft_strlen(const char *c)
@@ -114,6 +114,7 @@ char *extra(char *buf, size_t i)
 	return (ft_substr(buf, 0, i + 1));
 }
 
+// another one
 int	ft_strchr(char *s, int c)
 {
 	int				i;
@@ -148,6 +149,9 @@ int	ft_strchr(char *s, int c)
 
 //	_ _ _ _ _   _ _ _ \n_ _
 
+/// @brief 
+/// @param fd 
+/// @return 
 char *get_next_line(int fd)
 {
 	static char	*buffer = NULL;
@@ -155,30 +159,29 @@ char *get_next_line(int fd)
 	size_t		i;
 	int			trigger;
 	char		*new_line;
-	//char		*extra;
-	
+
 	trigger = 1;
 	i = 0;
 	new_line = "";
 	if (buffer != NULL)
-		ft_strjoin(new_line, buffer);
+		new_line = ft_strjoin(new_line, buffer);
 	while (trigger > 0) // there is what to save, we are saving to the buffer)
 	{
-		//buf = NULL;// do I need this???
 		buf = (char *)malloc(BUFFER_SIZE * sizeof(char) + 1);
 		trigger = read(fd, buf, BUFFER_SIZE);
-		buf[BUFFER_SIZE] = '\0';
+		buf[trigger] = '\0';
 		if (ft_strchr(buf, 10) != 0)
 		{
 			i = ft_strchr(buf, 10);
-			;
 			buffer = split_the_buf_to_store_in_static(buf, i);
 			new_line = ft_strjoin(new_line, extra(buf, i));
+			//free(buf);
 			break;
 		}
 		new_line = ft_strjoin(new_line, buf);
 		i++;
 	}
+	free(buf);
 	return (new_line);
 }
 
@@ -189,15 +192,15 @@ int main()
 	char *str;
 	
 	str = get_next_line(fd1);
-	printf("%s\n", str);
+	printf("%s", str);
 	str = get_next_line(fd1);
-	printf("%s\n", str);
+	printf("%s", str);
 	str = get_next_line(fd1);
-	printf("%s\n", str);
+	printf("%s", str);
 	str = get_next_line(fd1);
-	printf("%s\n", str);
+	printf("%s", str);
 	str = get_next_line(fd1);
-	printf("%s\n", str);
+	printf("%s", str);
 	free(str);
 	close(fd1);
 }
