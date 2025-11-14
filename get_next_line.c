@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: vs <vs@student.42.fr>                      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/10 10:42:47 by vs                #+#    #+#             */
-/*   Updated: 2025/11/13 22:55:53 by vs               ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   get_next_line.c                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: vs <vs@student.42.fr>                        +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/11/10 10:42:47 by vs            #+#    #+#                 */
+/*   Updated: 2025/11/14 13:26:56 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,79 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	d = malloc(len_s);
 	i = 0;
 	while (s1[i] != '\0')
-		d[i++] = s1[i];
+	{
+		d[i] = s1[i];
+		i++;
+	}
 	p = 0;
 	while (i < len_s)
 		d[i++] = s2[p++];
 	d[i] = '\0';
 	return (d);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*d;
+	size_t	i;
+	size_t	len;
+
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s);
+	d = malloc(len + 1);
+	if (!d)
+		return (NULL);
+	i = 0;
+	if (s)
+	{
+		while (s[i] != '\0')
+		{
+			d[i] = s[i];
+			i++;
+		}
+	}
+	d[i] = '\0';
+	return (d);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*d;
+	size_t	i;
+
+	if (start > ft_strlen(s))
+		return (ft_strdup(""));
+	if ((start + len) > ft_strlen(s))
+		len = ft_strlen(s) - start;
+	d = malloc(len + 1);
+	if (d == NULL)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		d[i] = s[start];
+		i++;
+		start++;
+	}
+	d[i] = '\0';
+	return (d);
+}
+
+
+
+/// @brief splits the buf with \n, appends \n and stuff before \n to new line
+/// @param buf stuff we read and where we found \n
+/// @param new_line the line that GNL returns
+/// @param i position of the \n
+/// @return ???
+char *split_the_buf(char *buf, char *new_line, size_t i)
+{
+	char *before_new_line;
+
+	before_new_line = ft_substr(buf, 0, i);
+	new_line = ft_strjoin(new_line, before_new_line);
+	return (ft_substr(buf, i, BUFFER_SIZE - i));
 }
 
 int	ft_strchr(char *s, int c)
@@ -63,8 +130,8 @@ int	ft_strchr(char *s, int c)
 			return (i);
 		i++;
 	}
-	if (r[i] == ch)
-		return (i);
+	//if (r[i] == ch)
+	//	return (i);
 	return (0);
 }
 
@@ -91,44 +158,42 @@ char *get_next_line(int fd)
 	trigger = 1;
 	i = 0;
 	new_line = "";
+	if (buffer != NULL)
+		ft_strjoin(new_line, buffer);
 	while (trigger > 0) // there is what to save, we are saving to the buffer)
 	{
-		buf = NULL;
+		//buf = NULL;// do I need this???
 		buf = (char *)malloc(BUFFER_SIZE * sizeof(char) + 1);
 		trigger = read(fd, buf, BUFFER_SIZE);
 		buf[BUFFER_SIZE] = '\0';
-		if (ft_strchr(buf, 10) == 0)
+		if (ft_strchr(buf, 10) != 0)
+		{
+			i = ft_strchr(buf, 10);
+			buffer = split_the_buf(buf, new_line, i);
 			break;
+		}
 		new_line = ft_strjoin(new_line, buf);
-		
 		i++;
 	}
-	printf("%s\n", new_line);
-	printf("we read %lu amount of times\n", i);
-
-	// split the buf
-	
-//	buffer = leftover chars from buf;
-	
-	// check buff for the \n (new_line)
-//	printf("%s/n", new_line);
-	// save leftover data after the \n
-	
-	// malloc the string to save it
-	
-	// as soon as there is an end of the file or \n
-	// we are printing
 	return (new_line);
 }
 
 int main()
 {
 //	int fd = open("test.txt", O_RDONLY);
-	int fd1 = open("1test.txt", O_RDONLY);
+	int fd1 = open("test.txt", O_RDONLY);
 	char *str;
 	
 	str = get_next_line(fd1);
 	printf("%s\n", str);
-	//free(str);
+	str = get_next_line(fd1);
+	printf("%s\n", str);
+	str = get_next_line(fd1);
+	printf("%s\n", str);
+	str = get_next_line(fd1);
+	printf("%s\n", str);
+	str = get_next_line(fd1);
+	printf("%s\n", str);
+	free(str);
 	close(fd1);
 }
