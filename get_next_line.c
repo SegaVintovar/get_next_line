@@ -6,14 +6,14 @@
 /*   By: vs <vs@student.42.fr>                        +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/10 10:42:47 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/14 18:21:49 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/15 19:43:53 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdlib.h>
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 15
+#define BUFFER_SIZE 14
 #endif
 
 size_t	ft_strlen(const char *c)
@@ -26,7 +26,8 @@ size_t	ft_strlen(const char *c)
 	return (len);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+// malloced returned value
+char	*ft_strjoin(char *s1, char const *s2)
 {
 	size_t	len_s;
 	size_t	i;
@@ -36,6 +37,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	i = ft_strlen(s1) + 1;
 	len_s = i + ft_strlen(s2);
 	d = malloc(len_s);
+	// ceck the malloc
 	i = 0;
 	while (s1[i] != '\0')
 	{
@@ -46,9 +48,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (i < len_s)
 		d[i++] = s2[p++];
 	d[i] = '\0';
+	free((void *)s1);
+	free((void *)s2);
 	return (d);
 }
 
+// malloced returned value
 char	*ft_strdup(const char *s)
 {
 	char	*d;
@@ -74,6 +79,7 @@ char	*ft_strdup(const char *s)
 	return (d);
 }
 
+// malloced returned value
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*d;
@@ -100,6 +106,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 
 /// @brief splits the buf with \n, appends \n and stuff before \n to new line
+/// it mallocs
 /// @param buf stuff we read and where we found \n
 /// @param new_line the line that GNL returns
 /// @param i position of the \n
@@ -109,6 +116,7 @@ char *split_the_buf_to_store_in_static(char *buf, size_t i)
 	return (ft_substr(buf, i, BUFFER_SIZE - i + 1));
 }
 
+// there is a malloc
 char *extra(char *buf, size_t i)
 {
 	return (ft_substr(buf, 0, i + 1));
@@ -193,14 +201,14 @@ int main()
 	
 	str = get_next_line(fd1);
 	printf("%s", str);
-	str = get_next_line(fd1);
-	printf("%s", str);
-	str = get_next_line(fd1);
-	printf("%s", str);
-	str = get_next_line(fd1);
-	printf("%s", str);
-	str = get_next_line(fd1);
-	printf("%s", str);
+	// str = get_next_line(fd1);
+	// printf("%s", str);
+	// str = get_next_line(fd1);
+	// printf("%s", str);
+	// str = get_next_line(fd1);
+	// printf("%s", str);
+	// str = get_next_line(fd1);
+	// printf("%s", str);
 	free(str);
 	close(fd1);
 }
