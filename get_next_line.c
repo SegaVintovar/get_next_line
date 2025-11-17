@@ -6,7 +6,7 @@
 /*   By: vs <vs@student.42.fr>                        +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/10 10:42:47 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/15 19:43:53 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/17 12:49:54 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ char *extra(char *buf, size_t i)
 }
 
 // another one
-int	ft_strchr(char *s, int c)
+char	*ft_strchr(char *s, int c)
 {
 	int				i;
 	char			*r;
@@ -189,7 +189,7 @@ char *get_next_line(int fd)
 		new_line = ft_strjoin(new_line, buf);
 		i++;
 	}
-	free(buf);
+	//free(buf);
 	return (new_line);
 }
 

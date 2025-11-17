@@ -2,27 +2,78 @@
 
 static char *buffer = NULL;
 
+static char *get_the_rest(char *buffer)
+{
+	char *result;
+	
+	if (buffer != NULL || buffer[0] != '\0')
+	{
+		result = ft_strchr(buffer, 10) + 1;
+		return(result);
+	}
+	return("");
+}
+
+static char *remove_the_rest(char *new_line)
+{
+	size_t i;
+	size_t p;
+	char *result;
+
+	i = 0;
+	while (new_line[i] != 10)
+	{
+		i++;
+	}
+	result = (char *)malloc(i * sizeof(char) + 1);
+	if (!result)
+		return (NULL);
+	p = 0;
+	while(p <= i)
+	{
+		result[p] = new_line[p];
+		p++;
+	}
+	result[p] = '\0';
+	// printf("%s", new_line);
+	// if (new_line)
+	// 	free(new_line);
+	return (result);
+}
+
 char * get_next_line(int fd)
 {
 	char *new_line;
 	size_t bytes;
 
+	if (buffer != NULL)
+	{
+		if (buffer[0] == '\0')
+		{
+			new_line = "\n";
+			return(new_line);
+		}	
+		new_line = ft_strjoin(new_line, buffer);
+	}
 	bytes = 1;
 	while (ft_strchr(buffer, '\n') == 0 && bytes > 0)
 	{
 		buffer = (char *)malloc(BUFFER_SIZE + 1);
 		bytes = read(fd, buffer, BUFFER_SIZE);
-		buffer[BUFFER_SIZE] = '\0';
-		printf("This is our buffer %s\n", buffer);
+		buffer[bytes] = '\0';
 		new_line = ft_strjoin(new_line, buffer);
 	}
-	// idk if my bufffer(or new_line) gonna be changed in buffer managment func
-	printf("%s\n", new_line);
-
-
-
+	if (bytes <= 0)
+		return(NULL);
+	buffer = get_the_rest(buffer);
+	new_line = remove_the_rest(new_line);
 	return(new_line);
 }
+
+// char *read_file_till_the_end(int fd)
+// {
+// 	while ()
+// }
 
 int main()
 {
@@ -30,5 +81,18 @@ int main()
 	char *next_line;
 	next_line = get_next_line(fd);
 	printf("%s", next_line);
+	next_line = get_next_line(fd);
+	printf("%s", next_line);
+	next_line = get_next_line(fd);
+	printf("%s", next_line);
+	next_line = get_next_line(fd);
+	printf("%s", next_line);
+	next_line = get_next_line(fd);
+	printf("%s", next_line);
+	next_line = get_next_line(fd);
+	printf("%s", next_line);
+	next_line = get_next_line(fd);
+	printf("%s", next_line);
+	free(next_line);
 	close(fd);
 }
