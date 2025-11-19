@@ -1,6 +1,6 @@
 #include "get_next_line.h"
 
-static char *buffer = NULL;
+
 
 static char *get_the_rest(char *buffer)
 {
@@ -22,11 +22,11 @@ static char *remove_the_rest(char *new_line)
 	size_t p;
 	char *result;
 
+	if (*new_line == '\0')
+		return (NULL);
 	i = 0;
 	while (new_line[i] != 10)
-	{
 		i++;
-	}
 	result = (char *)malloc(i * sizeof(char) + 1);
 	if (!result)
 		return (NULL);
@@ -37,15 +37,15 @@ static char *remove_the_rest(char *new_line)
 		p++;
 	}
 	result[p] = '\0';
-	// printf("%s", new_line);
-	// if (new_line)
-	// 	free(new_line);
+	if (*new_line)
+		free(new_line);
 	return (result);
 }
 
 char	*get_next_line(int fd)
 {
-	char	*new_line = 0;
+	static char *buffer = NULL;
+	char	*new_line = NULL;
 	size_t	bytes;
 
 	if (buffer != NULL)
@@ -64,10 +64,12 @@ char	*get_next_line(int fd)
 		buffer = (char *)malloc(BUFFER_SIZE + 1);
 		bytes = read(fd, buffer, BUFFER_SIZE);
 		if (bytes <= 0)
+		{
 			if (*new_line == '\0')
 				return (NULL);
 			else
 				return (new_line);
+		}
 		buffer[bytes] = '\0';
 		new_line = ft_strjoin(new_line, buffer);
 	}
@@ -75,6 +77,8 @@ char	*get_next_line(int fd)
 		return (NULL);
 	buffer = get_the_rest(buffer);
 	new_line = remove_the_rest(new_line);
+	//  free(buffer);
+	// buffer = 0;
 	return(new_line);
 }
 
@@ -99,8 +103,10 @@ int main()
 	printf("%s", next_line);
 	next_line = get_next_line(fd);
 	printf("%s", next_line);
-	// next_line = get_next_line(fd);
-	// printf("%s", next_line);
+	next_line = get_next_line(fd);
+	printf("%s", next_line);
+	next_line = get_next_line(fd);
+	printf("%s", next_line);
 	free(next_line);
 	close(fd);
 }
