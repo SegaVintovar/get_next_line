@@ -9,9 +9,11 @@ static char *get_the_rest(char *buffer)
 	if (buffer != NULL || buffer[0] != '\0')
 	{
 		result = ft_strchr(buffer, 10) + 1;
+		// if (buffer != NULL)
+		// 	free(buffer);
 		return(result);
 	}
-	return("");
+	return (NULL);
 }
 
 static char *remove_the_rest(char *new_line)
@@ -41,18 +43,19 @@ static char *remove_the_rest(char *new_line)
 	return (result);
 }
 
-char * get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	char *new_line;
-	size_t bytes;
+	char	*new_line = 0;
+	size_t	bytes;
 
 	if (buffer != NULL)
 	{
-		if (buffer[0] == '\0')
+		if (ft_strchr(buffer, 10))
 		{
-			new_line = "\n";
-			return(new_line);
-		}	
+			new_line = remove_the_rest(buffer);
+			buffer = get_the_rest(buffer);
+			return (new_line);
+		}
 		new_line = ft_strjoin(new_line, buffer);
 	}
 	bytes = 1;
@@ -60,11 +63,16 @@ char * get_next_line(int fd)
 	{
 		buffer = (char *)malloc(BUFFER_SIZE + 1);
 		bytes = read(fd, buffer, BUFFER_SIZE);
+		if (bytes <= 0)
+			if (*new_line == '\0')
+				return (NULL);
+			else
+				return (new_line);
 		buffer[bytes] = '\0';
 		new_line = ft_strjoin(new_line, buffer);
 	}
-	if (bytes <= 0)
-		return(NULL);
+	if (buffer == NULL)
+		return (NULL);
 	buffer = get_the_rest(buffer);
 	new_line = remove_the_rest(new_line);
 	return(new_line);
@@ -91,8 +99,8 @@ int main()
 	printf("%s", next_line);
 	next_line = get_next_line(fd);
 	printf("%s", next_line);
-	next_line = get_next_line(fd);
-	printf("%s", next_line);
+	// next_line = get_next_line(fd);
+	// printf("%s", next_line);
 	free(next_line);
 	close(fd);
 }
