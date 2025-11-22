@@ -6,7 +6,7 @@
 /*   By: vs <vs@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 20:04:49 by vsudak            #+#    #+#             */
-/*   Updated: 2025/11/21 11:09:30 by vs               ###   ########.fr       */
+/*   Updated: 2025/11/22 11:42:45 by vs               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,22 @@ static char *get_the_rest(char *buffer)
 	return (NULL);
 }
 
+char *buf_is(char *buffer)
+{
+	char *line;
+
+	line = buffer;
+	if (ft_strchr(line, 10) != 0)// then checing if there is a \n
+	{
+		buffer = get_the_rest(buffer);
+		// if the buffer is empty - free it
+		line = remove_the_rest(line);
+		//free before return. how to free correctly?
+		return (line);
+	}
+	
+}
+
 //check up for mallocs
 char	*get_next_line(int fd)
 {
@@ -69,21 +85,12 @@ char	*get_next_line(int fd)
 	char 		*line = NULL;
 	
 	if (buffer != NULL)//what do we do when there is something in the buffer?
-	{
-		line = ft_strjoin(line, buffer);//yes, we are attaching it to the line
-		if (ft_strchr(line, 10) != 0)// then checing if there is a \n
-		{
-			buffer = get_the_rest(buffer);
-			// if the buffer is empty - free it
-			line = remove_the_rest(line);
-			//free before return. how to free correctly?
-			return (line);
-		}
-	}
+		line = buf_is(buffer);//yes, we are attaching it to the line
 	while (bytes > 0)
 	{
 		tmp = (char *)malloc(BUFFER_SIZE + 1);
-		//check the malloc
+		if (!tmp)
+			return (NULL);
 		bytes = read(fd, tmp, BUFFER_SIZE);
 		buffer = ft_strjoin(buffer, tmp);
 		if (ft_strchr(tmp, 10) != 0)
@@ -95,18 +102,18 @@ char	*get_next_line(int fd)
 			return (NULL);
 		}
 	}
+	free(tmp);
 	if (bytes <= 0)//EOF or wrong fd
-		// free(buffer);
+		//free(buffer);
 		// free(line);
-		// free(tmp);
 		return (NULL);
 	line = buffer;
 	//if (line != NULL)
 	line = remove_the_rest(line);
 	if (*buffer != 0)
 		buffer = get_the_rest(buffer);
-	if (*buffer == 0)
-		free(buffer);
+	// if (*buffer == 0)
+	// 	free(buffer);
 	return (line);
 }
 
@@ -122,6 +129,7 @@ int	main()
 	{
 		str = get_next_line(fd);
 		printf("%s", str);
+		free(str);
 		i++;
 	}
 	// str = get_next_line(fd);

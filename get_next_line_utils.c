@@ -6,7 +6,7 @@
 /*   By: vs <vs@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:45:58 by vs                #+#    #+#             */
-/*   Updated: 2025/11/20 13:13:51 by vs               ###   ########.fr       */
+/*   Updated: 2025/11/22 11:32:16 by vs               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ char    *ft_strjoin(char *s1, char *s2)
 
 		if (s1 == NULL)
 			return (s2);
+		// if (s2 == NULL)
+		// 	return (s1);
         i = ft_strlen(s1) + 1;
         len_s = i + ft_strlen(s2);
         d = malloc(len_s);
@@ -79,7 +81,12 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t	i;
 
 	if (start > ft_strlen(s))
-		return ("");
+		{
+			// d = (char *)malloc(1);
+			// d = 0;
+			// return (d);
+			return("");
+		}
 	if ((start + len) > ft_strlen(s))
 		len = ft_strlen(s) - start;
 	d = malloc(len + 1);
