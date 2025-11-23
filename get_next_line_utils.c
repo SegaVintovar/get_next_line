@@ -6,7 +6,7 @@
 /*   By: vs <vs@student.42.fr>                        +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/17 10:45:58 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/23 13:14:12 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/23 14:19:27 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char *join_help(char *s1, const char *s2, size_t len1, size_t len2)
 		result[i] = s1[i];
 		i++;
 	}
-	while (s2[p] != '\0')
+	while (s2 && s2[p] != '\0')
 	{
 		result[i + p] = s2[p];
 		p++;

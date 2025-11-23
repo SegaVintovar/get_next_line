@@ -6,7 +6,7 @@
 /*   By: vsudak <vsudak@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/22 12:58:35 by vsudak        #+#    #+#                 */
-/*   Updated: 2025/11/23 13:54:29 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/23 14:11:25 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,8 @@ char *get_next_line(int fd)
 	tmp = reading_func(fd);
 	line = remove_the_rest(tmp);
 	buffer = get_the_rest(tmp);
-	if (tmp)
-		free(tmp);
+	// if (tmp)
+	// 	free(tmp);
 	//line = buffer;
 	// if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	// {
@@ -131,9 +131,9 @@ int main()
 
 	fd = open("test.txt", O_RDONLY);
 	str = get_next_line(fd);
+	printf("%s", str);
+	str = get_next_line(fd);
 	printf("%s\n", str);
-	// str = get_next_line(fd);
-	// printf("%s\n", str);
 	// str = get_next_line(fd);
 	// printf("%s\n", str);
 	// str = get_next_line(fd);
