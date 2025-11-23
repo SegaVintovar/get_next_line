@@ -6,7 +6,7 @@
 /*   By: vsudak <vsudak@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/22 12:58:35 by vsudak        #+#    #+#                 */
-/*   Updated: 2025/11/23 14:11:25 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/23 14:25:37 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +99,15 @@ char *get_next_line(int fd)
 	char		*line;
 
 	if (buffer)
+	{
 		tmp = ft_strjoin(buffer, tmp);
+		//free(buffer);
+	}
 	tmp = reading_func(fd);
 	line = remove_the_rest(tmp);
 	buffer = get_the_rest(tmp);
-	// if (tmp)
-	// 	free(tmp);
+	if (tmp)
+		free(tmp);
 	//line = buffer;
 	// if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	// {
