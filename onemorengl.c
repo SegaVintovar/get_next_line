@@ -6,7 +6,7 @@
 /*   By: vsudak <vsudak@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/22 12:58:35 by vsudak        #+#    #+#                 */
-/*   Updated: 2025/11/23 14:25:37 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/23 18:16:56 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char *get_the_rest(char *buffer)
 	size_t	end;
 	
 	start = 0;
-	if (buffer != NULL || buffer[0] != '\0')
+	if (buffer || buffer[0] != '\0')
 	{
 		//result = *ft_strchr(buffer, 10) + 1;
 		end = ft_strlen(buffer);
@@ -41,7 +41,7 @@ static char *remove_the_rest(char *new_line)
 	size_t p;
 	char *result;
 
-	if (*new_line == '\0')
+	if (!new_line || *new_line == '\0')
 		return (NULL);
 	i = 0;
 	while (new_line[i] != 10)
@@ -77,7 +77,7 @@ char *reading_func(fd)
 			free(tmp);
 			return (NULL);
 		}
-		tmp[BUFFER_SIZE] = 0;
+		tmp[bytes] = 0;
 		result = ft_strjoin(result, tmp);//here is allocation
 		if (ft_strchr(tmp, 10) != 0)
 			break;
@@ -100,14 +100,20 @@ char *get_next_line(int fd)
 
 	if (buffer)
 	{
-		tmp = ft_strjoin(buffer, tmp);
-		//free(buffer);
+		tmp = ft_strjoin(tmp, buffer);//realloc tmp, and copy buffer there
+		if (buffer[0] == 0)
+			free(buffer);
 	}
-	tmp = reading_func(fd);
+	if (ft_strchr(tmp, 10) == 0)
+	{
+		line = reading_func(fd);
+		tmp = ft_strjoin(tmp, line);
+	}
+	//tmp = reading_func(fd);
 	line = remove_the_rest(tmp);
 	buffer = get_the_rest(tmp);
-	if (tmp)
-		free(tmp);
+	// if (tmp)
+	// 	free(tmp);
 	//line = buffer;
 	// if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	// {
@@ -131,19 +137,24 @@ int main()
 {
 	int fd;
 	char *str = NULL;
-
+	
+	// while (str = get_next_line) {
+		
+	// }
+	
 	fd = open("test.txt", O_RDONLY);
 	str = get_next_line(fd);
 	printf("%s", str);
 	str = get_next_line(fd);
-	printf("%s\n", str);
-	// str = get_next_line(fd);
-	// printf("%s\n", str);
-	// str = get_next_line(fd);
-	// printf("%s\n", str);
-	// str = get_next_line(fd);
-	// printf("%s\n", str);
+	printf("%s", str);
+	str = get_next_line(fd);
+	printf("%s", str);
+	str = get_next_line(fd);
+	printf("%s", str);
+	str = get_next_line(fd);
+	printf("%s", str);
 	close(fd);
-	free(str);
+	if (str)
+		free(str);
 	return (0);
 }

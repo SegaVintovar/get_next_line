@@ -6,7 +6,7 @@
 /*   By: vs <vs@student.42.fr>                        +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/17 10:45:58 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/23 14:19:27 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/23 17:19:18 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,14 +118,14 @@ char	*ft_strchr(char *s, int c)
 	ch = (unsigned char)c;
 	r = (char *)s;
 	i = 0;
+	if (r[i] == ch)
+		return (&r[i]);
 	while (r[i] != '\0')
 	{
 		if (r[i] == ch)
 			return (&r[i]);
 		i++;
 	}
-	if (r[i] == ch)
-		return (&r[i]);
 	return (0);
 }
 
