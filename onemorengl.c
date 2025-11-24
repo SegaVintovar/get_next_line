@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   onemorengl.c                                       :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: vsudak <vsudak@student.codam.nl>             +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2025/11/22 12:58:35 by vsudak        #+#    #+#                 */
-/*   Updated: 2025/11/23 18:16:56 by vsudak        ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   onemorengl.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vs <vs@student.42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/22 12:58:35 by vsudak            #+#    #+#             */
+/*   Updated: 2025/11/24 00:00:51 by vs               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static char *remove_the_rest(char *new_line)
 	i = 0;
 	while (new_line[i] != 10)
 		i++;
-	result = (char *)malloc(i * sizeof(char) + 1);
+	result = (char *)malloc(i * sizeof(char) + 1 + 1);
 	if (!result)
 		return (NULL);
 	p = 0;
@@ -61,7 +61,7 @@ static char *remove_the_rest(char *new_line)
 	return (result);
 }
 
-char *reading_func(fd)
+char *reading_func(int fd)
 {
 	char	*tmp;
 	char	*result = NULL;
@@ -94,7 +94,7 @@ char *reading_func(fd)
 char *get_next_line(int fd)
 {
 	static char	*buffer = NULL;
-	char		*tmp;
+	char		*tmp = NULL;
 	int			bytes;
 	char		*line;
 
@@ -112,8 +112,8 @@ char *get_next_line(int fd)
 	//tmp = reading_func(fd);
 	line = remove_the_rest(tmp);
 	buffer = get_the_rest(tmp);
-	// if (tmp)
-	// 	free(tmp);
+	if (tmp)
+		free(tmp);
 	//line = buffer;
 	// if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	// {
