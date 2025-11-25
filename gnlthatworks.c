@@ -60,6 +60,8 @@ char *reading_func(int fd)
 	while (bytes > 0)
 	{
 		bytes = read(fd, tmp, BUFFER_SIZE);
+		//if bytes are less than buf size then this is the end of the file
+		//still some stuff to do
 		if (bytes <= 0)
 		{
 			free(tmp);
