@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   onemorengl.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: vs <vs@student.42.fr>                      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/22 12:58:35 by vsudak            #+#    #+#             */
-/*   Updated: 2025/11/24 00:00:51 by vs               ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   onemorengl.c                                       :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: vs <vs@student.42.fr>                        +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/11/22 12:58:35 by vsudak        #+#    #+#                 */
+/*   Updated: 2025/11/24 16:02:41 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,19 @@ static char *get_the_rest(char *buffer)
 	size_t	end;
 	
 	start = 0;
-	if (buffer || buffer[0] != '\0')
+	if (buffer && buffer[0] != '\0')
 	{
 		//result = *ft_strchr(buffer, 10) + 1;
 		end = ft_strlen(buffer);
-		while (buffer[start] != '\n')
-				start++;
+		if (buffer[start] != 0)
+		{
+			while (buffer[start] != '\n')
+			start++;
+		}
 		start += 1;
 		result = ft_substr(buffer, start, end - start);
-		if (buffer)
-			free(buffer);
+		// if (buffer)
+		// 	free(buffer);
 		return(result);
 	}
 	return (NULL);
@@ -68,6 +71,8 @@ char *reading_func(int fd)
 	int		bytes;
 	
 	tmp = (char *)malloc(BUFFER_SIZE + 1);
+	if (!tmp)
+		return (NULL);
 	bytes = 1;
 	while (bytes > 0)
 	{
@@ -95,41 +100,32 @@ char *get_next_line(int fd)
 {
 	static char	*buffer = NULL;
 	char		*tmp = NULL;
-	int			bytes;
-	char		*line;
-
+	char		*line = NULL;
+	char		*gnl_hlp = NULL;
+	
 	if (buffer)
 	{
-		tmp = ft_strjoin(tmp, buffer);//realloc tmp, and copy buffer there
-		if (buffer[0] == 0)
-			free(buffer);
+		//tmp = ft_strjoin(tmp, buffer);//realloc tmp, and copy buffer there
+		gnl_hlp = buffer;
+		//free(buffer);
+		buffer = NULL;
 	}
-	if (ft_strchr(tmp, 10) == 0)
+	if (ft_strchr(tmp, 10) == NULL)
 	{
 		line = reading_func(fd);
-		tmp = ft_strjoin(tmp, line);
+		tmp = ft_strjoin(gnl_hlp, line);
+		free(line);
+		// line = NULL;
 	}
-	//tmp = reading_func(fd);
+	gnl_hlp = get_the_rest(tmp);
+	buffer = gnl_hlp;
+	if (gnl_hlp)
+		free(gnl_hlp);
 	line = remove_the_rest(tmp);
-	buffer = get_the_rest(tmp);
 	if (tmp)
 		free(tmp);
-	//line = buffer;
-	// if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-	// {
-	// 	free(buffer);
-	// 	return (NULL);
-	// }
-	// if (buffer != NULL)
-	// {
-	// 	if (ft_strchr(buffer, 10) != 0)
-	// 	{
-	// 		line = buf_is(buffer);
-	// 		free(buffer);
-	// 	}
-	// }
-	//line is still NULL
-	
+	if (line == NULL)
+		free(buffer);
 	return (line);
 }
 
@@ -145,16 +141,27 @@ int main()
 	fd = open("test.txt", O_RDONLY);
 	str = get_next_line(fd);
 	printf("%s", str);
-	str = get_next_line(fd);
-	printf("%s", str);
-	str = get_next_line(fd);
-	printf("%s", str);
-	str = get_next_line(fd);
-	printf("%s", str);
-	str = get_next_line(fd);
-	printf("%s", str);
-	close(fd);
 	if (str)
 		free(str);
+	str = get_next_line(fd);
+	printf("%s", str);
+	if (str)
+		free(str);
+	// str = get_next_line(fd);
+	// printf("%s", str);
+	// if (str)
+	// 	free(str);
+	// str = get_next_line(fd);
+	// printf("%s", str);
+	// if (str)
+	// 	free(str);
+	// str = get_next_line(fd);
+	// printf("%s", str);
+	// str = get_next_line(fd);
+	// printf("%s", str);
+	// str = get_next_line(fd);
+	// printf("%s", str);
+	close(fd);
+
 	return (0);
 }
