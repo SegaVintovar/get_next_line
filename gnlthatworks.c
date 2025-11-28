@@ -18,6 +18,10 @@ static char *get_the_rest(char *buffer)
 		}
 		start += 1;
 		result = ft_substr(buffer, start, end - start);
+
+
+
+		
 		return(result);
 	}
 	return (NULL);
@@ -57,7 +61,7 @@ char *reading_func(int fd)
 	if (!tmp)
 		return (NULL);
 	bytes = 1;
-	while (bytes > 0)
+	while (bytes > 0 || bytes == BUFFER_SIZE)
 	{
 		bytes = read(fd, tmp, BUFFER_SIZE);
 		//if bytes are less than buf size then this is the end of the file
@@ -69,9 +73,12 @@ char *reading_func(int fd)
 		}
 		tmp[bytes] = 0;
 		result = ft_strjoin(result, tmp);
-		if (ft_strchr(tmp, 10) != 0)
+		if (ft_strchr(tmp, 10) != 0 )
 			break;
 	}
+	// eof = 0;
+	// if (bytes != BUFFER_SIZE)
+	// 	eof = 1;
 	free(tmp);
 	return (result);
 }
@@ -83,7 +90,7 @@ char *get_next_line(int fd)
 	char		*line = NULL;
 	char		*gnl_hlp = NULL;
 	
-	if (buffer)
+	if (buffer && buffer[0] != 0)
 	{
 		gnl_hlp = buffer;
 		buffer = NULL;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   get_next_line_utils.c                              :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: vs <vs@student.42.fr>                        +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2025/11/17 10:45:58 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/24 15:31:53 by vsudak        ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vs <vs@student.42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/17 10:45:58 by vs                #+#    #+#             */
+/*   Updated: 2025/11/28 10:27:14 by vs               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strjoin(char *s1, const char *s2)
 	size_t	len2;
 	char	*result;
 	
-	if (!s1)
+	if (!s1 || s1[0] == 0)
 		len1 = 0;
 	else
 		len1 = ft_strlen(s1);
@@ -129,13 +129,24 @@ char	*ft_strchr(char *s, int c)
 	return (NULL);
 }
 
+char *empty_str()
+{
+	char *str;
+	str = (char *)malloc(1);
+	if (!str)
+		free(str);
+		return (NULL);
+	str[0] = 0;
+	return (str);
+}
+
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*d;
 	size_t	i;
 
 	if (start > ft_strlen(s))
-		return ("");
+		return (empty_str);//
 	if ((start + len) > ft_strlen(s))
 		len = ft_strlen(s) - start;
 	d = malloc(len + 1);
