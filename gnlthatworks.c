@@ -96,8 +96,8 @@ char *get_next_line(int fd)
 	{
 		line = reading_func(fd);
 		tmp = ft_strjoin(gnl_hlp, line);
-		free(line);
-		line = NULL;
+		// free(line);
+		// line = NULL;
 	}
 	gnl_hlp = get_the_rest(tmp);
 	buffer = gnl_hlp;

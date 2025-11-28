@@ -6,25 +6,27 @@
 /*   By: vs <vs@student.42.fr>                        +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/26 12:53:13 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/28 11:52:27 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/28 20:02:23 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-// allocating here
-char	*reading_func(int fd, char *buffer)
+// allocating here, there \n in return or \0
+char	*reading_func(int fd)
 {
 	int bytes;
 	int dif;
 	char tmp[BUFFER_SIZE + 1];
-	char *what_we_read;
+	char *what_we_read = NULL;
 
 	dif = 0;
-	
-	while (dif == 0 && ft_strchr(what_we_read, 10) == NULL)
+	bytes = 1;
+	while (bytes > 0 && ft_strchr(what_we_read, 10) == NULL)
 	{
 		bytes = read(fd, tmp, BUFFER_SIZE);
+		if (bytes <=0 )
+			break;
 		tmp[bytes] = '\0';
 		what_we_read = ft_strjoin(what_we_read, tmp);
 		dif = BUFFER_SIZE - bytes;
@@ -34,65 +36,140 @@ char	*reading_func(int fd, char *buffer)
 		free(what_we_read);
 		return (NULL);
 	}
-	return what_we_read;
+	return (what_we_read);
 }
 
-// new line has to be reallocated and buffer allocating 
-void	*extractor(char *new_line, char *buffer)
+
+char	*line_extractor(char *line)
 {
-	char	*new_buffer = NULL;
+	char *new_line = NULL;
 	size_t	start;
-	size_t	end;
 	
 	start = 0;
-	end = ft_strlen(new_line);
-	while (new_line && new_line[start] != 10)
-	{
+	// if (line[0] == 0)
+	// {
+	// 	free(line);
+	// 	return (NULL);
+	// }
+	if (!line)
+		return (NULL);
+	while (line && (line[start] != 10 && line[start] != 0))
 		start++;
-	}
-	buffer = ft_substr(new_line, ++start, end - start);
-	new_buffer = new_line;
-	free(new_line);
-	new_line = NULL;
-	new_line = ft_substr(new_buffer, 0, start);
-	if (new_buffer)
-		free(new_buffer);
+	new_line = ft_substr(line, 0, start + 1);
+	return(new_line);
 }
 
+char	*buffer_extractor(char *line)
+{
+	char	*buffer = NULL;
+	size_t	start;
+	size_t	end;
+	char	*empty;
+	
+	empty = "";
+	if (!line)
+		return (NULL);
+	end = ft_strlen(line);
+	start = 0;
+	// if (line[0] == 0)
+	// {
+	// 	free(line);
+	// 	return (NULL);
+	// }
+	while (line && (line[start] != 10 && line[start] != 0))
+		start++;
+	start += 1;
+	if (start == end)
+		return (free(line), NULL);
+	buffer = ft_substr(line, start, end - start);
+	if (buffer == empty)
+	{
+		free(buffer);
+		free(line);
+		return (NULL);
+	}
+	free(line);
+	return (buffer);
+}
 
 
 char *get_next_line(int fd)
 {
-	static char *buffer = NULL;
-	char *new_line;
-	char *tmp = NULL;
+	static char	*buffer = NULL;
+	char		*new_line = NULL;
+	char		*tmp = NULL;
+	char		*what_we_read = NULL;
+	char		*workspace = NULL;
 	
 	if (buffer)
 	{
-		new_line = ft_strjoin(tmp, buffer);
-		free(buffer);
+		tmp = buffer;
 		buffer = NULL;
+		if (ft_strchr(tmp, 10) != NULL)
+		{
+			new_line = line_extractor(tmp);
+			buffer = buffer_extractor(tmp);// here is free
+			return (new_line);
+		}
 	}
-	tmp = reading_func(fd, buffer);//allocating here
-	new_line = ft_strjoin(new_line, tmp);
-	if (tmp)
+	what_we_read = reading_func(fd);// allocating here
+	if (what_we_read == NULL && buffer && buffer[0] == 0)
 	{
-		free(tmp);
-		tmp = NULL;
+		free(what_we_read);
+		free(buffer);
+		return (NULL);
 	}
-	extractor(new_line, buffer);
+	workspace = ft_strjoin(tmp, what_we_read);// reallcation of the tmp
+	free(what_we_read);
+	what_we_read = NULL;
+	// if (tmp)
+	// {
+	// 	free(tmp);
+	// 	tmp = NULL;
+	// }
+	new_line = line_extractor(workspace);
+	buffer = buffer_extractor(workspace);// here is free
 	return (new_line);
 }
+
+// char *get_next_line(int fd)
+// {
+// 	static char *buffer = NULL;
+// 	char *new_line;
+// 	char *tmp = NULL;
+	
+// 	if (buffer)
+// 	{
+// 		new_line = ft_strjoin(tmp, buffer);
+// 		free(buffer);
+// 		buffer = NULL;
+// 	}
+// 	tmp = reading_func(fd);//allocating here
+// 	new_line = ft_strjoin(new_line, tmp);
+// 	if (tmp)
+// 	{
+// 		free(tmp);
+// 		tmp = NULL;
+// 	}
+// 	new_line = line_extractor(new_line);
+// 	return (new_line);
+// }
 
 
 int main()
 {
 	int fd = open("test.txt", O_RDONLY);
 	char *str;
-	str = get_next_line(fd);
-	printf("%s", str);
-	if (str)
-		free(str);
+	do {
+		str = get_next_line(fd);
+		
+		if (str)
+		{
+			printf("%s", str);
+			free(str);
+		}
+	}	while (str);
+
 	
 }
 

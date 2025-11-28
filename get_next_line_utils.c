@@ -6,7 +6,7 @@
 /*   By: vs <vs@student.42.fr>                        +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/17 10:45:58 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/28 12:30:52 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/28 19:12:11 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ char	*ft_strjoin(char *s1, const char *s2)
 		len2 = ft_strlen(s2);
 
 	result = join_help(s1, s2, len1, len2);
+	if (result && result[0] == 0 )
+		return (free(s1), free(result), NULL);
 	return (result);
 }
 
@@ -129,16 +131,16 @@ char	*ft_strchr(char *s, int c)
 	return (NULL);
 }
 
-char	*empty_str()
-{
-	char *str;
-	str = (char *)malloc(1);
-	if (!str)
-		free(str);
-		return (NULL);
-	str[0] = 0;
-	return (str);
-}
+// char	*empty_str()
+// {
+// 	char *str;
+// 	str = (char *)malloc(1);
+// 	if (!str)
+// 		free(str);
+// 		return (NULL);
+// 	str[0] = 0;
+// 	return (str);
+// }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
@@ -146,15 +148,16 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t	i;
 	char *empty;
 	
-	// empty = (char *)malloc(1);
-	// empty[0] = 0;
 	if (start > ft_strlen(s))
 		return (NULL);//
 	if ((start + len) > ft_strlen(s))
 		len = ft_strlen(s) - start;
 	d = malloc(len + 1);
 	if (d == NULL)
+	{
+		free(d);
 		return (NULL);
+	}
 	i = 0;
 	while (i < len)
 	{
