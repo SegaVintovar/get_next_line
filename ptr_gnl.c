@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ptr_gnl.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: vs <vs@student.42.fr>                      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/26 12:53:13 by vs                #+#    #+#             */
-/*   Updated: 2025/11/28 10:16:55 by vs               ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   ptr_gnl.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: vs <vs@student.42.fr>                        +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/11/26 12:53:13 by vs            #+#    #+#                 */
+/*   Updated: 2025/11/28 11:52:27 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,17 @@ char	*reading_func(int fd, char *buffer)
 
 	dif = 0;
 	
-	while (dif == 0)
+	while (dif == 0 && ft_strchr(what_we_read, 10) == NULL)
 	{
 		bytes = read(fd, tmp, BUFFER_SIZE);
 		tmp[bytes] = '\0';
 		what_we_read = ft_strjoin(what_we_read, tmp);
 		dif = BUFFER_SIZE - bytes;
-		if (ft_strchr(what_we_read, 10) != NULL)
-			return what_we_read;
+	}
+	if (dif == BUFFER_SIZE)
+	{
+		free(what_we_read);
+		return (NULL);
 	}
 	return what_we_read;
 }
@@ -70,7 +73,7 @@ char *get_next_line(int fd)
 		free(buffer);
 		buffer = NULL;
 	}
-	tmp = reading_func(fd, buffer);
+	tmp = reading_func(fd, buffer);//allocating here
 	new_line = ft_strjoin(new_line, tmp);
 	if (tmp)
 	{

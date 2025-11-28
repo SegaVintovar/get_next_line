@@ -14,14 +14,11 @@ static char *get_the_rest(char *buffer)
 		if (buffer[start] != 0)
 		{
 			while (buffer[start] != '\n' && buffer[start] != '\0')// here is segfault
-			start++;
+				start++;
 		}
 		start += 1;
 		result = ft_substr(buffer, start, end - start);
-
-
-
-		
+		//free(buffer);
 		return(result);
 	}
 	return (NULL);
@@ -69,7 +66,7 @@ char *reading_func(int fd)
 		if (bytes <= 0)
 		{
 			free(tmp);
-			return (NULL);
+			return (result);
 		}
 		tmp[bytes] = 0;
 		result = ft_strjoin(result, tmp);
@@ -95,11 +92,12 @@ char *get_next_line(int fd)
 		gnl_hlp = buffer;
 		buffer = NULL;
 	}
-	if (ft_strchr(tmp, 10) == NULL)
+	if (ft_strchr(gnl_hlp, 10) == NULL)
 	{
 		line = reading_func(fd);
 		tmp = ft_strjoin(gnl_hlp, line);
 		free(line);
+		line = NULL;
 	}
 	gnl_hlp = get_the_rest(tmp);
 	buffer = gnl_hlp;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: vs <vs@student.42.fr>                      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/17 10:45:58 by vs                #+#    #+#             */
-/*   Updated: 2025/11/28 10:27:14 by vs               ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   get_next_line_utils.c                              :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: vs <vs@student.42.fr>                        +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/11/17 10:45:58 by vs            #+#    #+#                 */
+/*   Updated: 2025/11/28 12:30:52 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ char	*ft_strchr(char *s, int c)
 	unsigned char	ch;
 
 	if (s == NULL)
-		return (0);
+		return (NULL);
 	ch = (unsigned char)c;
 	r = (char *)s;
 	i = 0;
@@ -129,7 +129,7 @@ char	*ft_strchr(char *s, int c)
 	return (NULL);
 }
 
-char *empty_str()
+char	*empty_str()
 {
 	char *str;
 	str = (char *)malloc(1);
@@ -144,9 +144,12 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*d;
 	size_t	i;
-
+	char *empty;
+	
+	// empty = (char *)malloc(1);
+	// empty[0] = 0;
 	if (start > ft_strlen(s))
-		return (empty_str);//
+		return (NULL);//
 	if ((start + len) > ft_strlen(s))
 		len = ft_strlen(s) - start;
 	d = malloc(len + 1);
