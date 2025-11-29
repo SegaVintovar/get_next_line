@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   get_next_line_utils.c                              :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: vs <vs@student.42.fr>                        +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2025/11/17 10:45:58 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/28 19:12:11 by vsudak        ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vs <vs@student.42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/17 10:45:58 by vs                #+#    #+#             */
+/*   Updated: 2025/11/29 11:49:13 by vs               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ char	*ft_strjoin(char *s1, const char *s2)
 		len2 = 0;
 	else
 		len2 = ft_strlen(s2);
-
+	if (!s1 && !s2)
+		return (NULL);
 	result = join_help(s1, s2, len1, len2);
 	if (result && result[0] == 0 )
 		return (free(s1), free(result), NULL);

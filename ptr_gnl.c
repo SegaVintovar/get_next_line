@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   ptr_gnl.c                                          :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: vs <vs@student.42.fr>                        +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2025/11/26 12:53:13 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/28 20:02:23 by vsudak        ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   ptr_gnl.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vs <vs@student.42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/26 12:53:13 by vs                #+#    #+#             */
+/*   Updated: 2025/11/29 13:09:37 by vs               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,39 +97,24 @@ char *get_next_line(int fd)
 {
 	static char	*buffer = NULL;
 	char		*new_line = NULL;
-	char		*tmp = NULL;
 	char		*what_we_read = NULL;
 	char		*workspace = NULL;
 	
-	if (buffer)
+	if (buffer && ft_strchr(buffer, 10) != NULL)
 	{
-		tmp = buffer;
-		buffer = NULL;
-		if (ft_strchr(tmp, 10) != NULL)
-		{
-			new_line = line_extractor(tmp);
-			buffer = buffer_extractor(tmp);// here is free
-			return (new_line);
-		}
+		new_line = line_extractor(buffer);
+		buffer = buffer_extractor(buffer);// here is free
+		return (new_line);
 	}
 	what_we_read = reading_func(fd);// allocating here
-	if (what_we_read == NULL && buffer && buffer[0] == 0)
-	{
-		free(what_we_read);
-		free(buffer);
-		return (NULL);
-	}
-	workspace = ft_strjoin(tmp, what_we_read);// reallcation of the tmp
-	free(what_we_read);
-	what_we_read = NULL;
-	// if (tmp)
-	// {
-	// 	free(tmp);
-	// 	tmp = NULL;
-	// }
+	if (what_we_read == NULL && (!buffer || buffer[0] == 0))
+		return (free(what_we_read), free(buffer), NULL);
+	workspace = ft_strjoin(buffer, what_we_read);
+	if (what_we_read == NULL && buffer == NULL)// reallcation of the tmp
+		return (free(what_we_read), NULL);
 	new_line = line_extractor(workspace);
 	buffer = buffer_extractor(workspace);// here is free
-	return (new_line);
+	return (free(what_we_read), new_line);
 }
 
 // char *get_next_line(int fd)
@@ -160,17 +145,23 @@ int main()
 {
 	int fd = open("test.txt", O_RDONLY);
 	char *str;
-	do {
-		str = get_next_line(fd);
+	// do {
+	// 	str = get_next_line(fd);
 		
-		if (str)
-		{
-			printf("%s", str);
-			free(str);
-		}
-	}	while (str);
+	// 	if (str)
+	// 	{
+	// 		printf("%s", str);
+	// 		free(str);
+	// 	}
+	// }	while (str);
 
+	str = reading_func(fd);
 	
+	if (str)
+	{
+		printf("%s", str);
+		free(str);
+	}
 }
 
 // if there is a buffer
