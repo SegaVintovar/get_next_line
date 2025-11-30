@@ -1,41 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   get_next_line.c                                    :+:    :+:            */
+/*   get_next_line_bonus.c                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: vs <vs@student.42.fr>                        +#+                     */
+/*   By: vsudak <vsudak@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2025/11/26 12:53:13 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/30 13:20:52 by vsudak        ########   odam.nl         */
+/*   Created: 2025/11/30 12:08:54 by vsudak        #+#    #+#                 */
+/*   Updated: 2025/11/30 13:21:47 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-
-// allocating here, there \n in return or \0
-// char	*reading_func(int fd)
-// {
-// 	int		bytes;
-// 	char	tmp[BUFFER_SIZE + 1];
-// 	char	*what_we_read;
-
-// 	what_we_read = NULL;
-// 	bytes = 1;
-// 	while (bytes > 0 && ft_strchr(what_we_read, 10) == NULL)
-// 	{
-// 		bytes = read(fd, tmp, BUFFER_SIZE);
-// 		if (bytes < 0)
-// 		{
-// 			free(what_we_read);
-// 			return (free(what_we_read), NULL);
-// 		}
-// 		tmp[bytes] = '\0';
-// 		what_we_read = ft_strjoin(what_we_read, tmp);
-// 	}
-// 	if (bytes < 0)
-// 		return (free(what_we_read), NULL);
-// 	return (what_we_read);
-// }
+#include "get_next_line_bonus.h"
 
 char	*reading_func(int fd)
 {
@@ -110,7 +85,7 @@ char	*buffer_extractor(char *line)
 // 
 char	*get_next_line(int fd)
 {
-	static char	*buffer = NULL;
+	static char	*buffer[1024];
 	char		*new_line;
 	char		*what_we_read;
 	char		*workspace;
@@ -120,67 +95,17 @@ char	*get_next_line(int fd)
 	workspace = NULL;
 	if (fd < 0 || fd > 1024)
 		return (NULL);
-	if (buffer && ft_strchr(buffer, 10) != NULL)
+	if (buffer[fd] && ft_strchr(buffer[fd], 10) != NULL)
 	{
-		new_line = line_extractor(buffer);
-		buffer = buffer_extractor(buffer);
+		new_line = line_extractor(buffer[fd]);
+		buffer[fd] = buffer_extractor(buffer[fd]);
 		return (new_line);
 	}
 	what_we_read = reading_func(fd);
-	workspace = ft_strjoin(buffer, what_we_read);
-	if (what_we_read == NULL && buffer == NULL)
+	workspace = ft_strjoin(buffer[fd], what_we_read);
+	if (what_we_read == NULL && buffer[fd] == NULL)
 		return (free(workspace), free(what_we_read), NULL);
 	new_line = line_extractor(workspace);
-	buffer = buffer_extractor(workspace);
+	buffer[fd] = buffer_extractor(workspace);
 	return (free(what_we_read), new_line);
 }
-
-// char *get_next_line(int fd)
-// {
-// 	static char *buffer = NULL;
-// 	char *new_line;
-// 	char *tmp = NULL;
-// 	if (buffer)
-// 	{
-// 		new_line = ft_strjoin(tmp, buffer);
-// 		free(buffer);
-// 		buffer = NULL;
-// 	}
-// 	tmp = reading_func(fd);//allocating here
-// 	new_line = ft_strjoin(new_line, tmp);
-// 	if (tmp)
-// 	{
-// 		free(tmp);
-// 		tmp = NULL;
-// 	}
-// 	new_line = line_extractor(new_line);
-// 	return (new_line);
-// }
-// int main(void)
-// {
-// 	int fd = open("test.txt", O_RDONLY);
-// 	char *str;
-// 	int eof = 0;
-// 	// do {
-// 	// 	str = get_next_line(fd);
-// 	// 	if (str)
-// 	// 	{
-// 	// 		printf("%s", str);
-// 	// 		free(str);
-// 	// 	}
-// 	// }	while (str);
-// 	str = reading_func(fd, eof);
-// 	if (str)
-// 	{
-// 		printf("%s", str);
-// 		free(str);
-// 	}
-// 	printf("\n%i\n", eof);
-// 	close(fd);
-// }
-// if there is a buffer
-// if there is a /n in it = extract new line. resave the buffer, 
-// return new line(free other stuff if there is some)
-// if not, attach the buffer to the helper line go to the reading function
-// if buffer[0] == 0 and bytes == 0
-// 

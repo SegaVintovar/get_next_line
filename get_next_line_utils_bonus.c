@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   get_next_line_utils.c                              :+:    :+:            */
+/*   get_next_line_utils_bonus.c                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: vs <vs@student.42.fr>                        +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/11/17 10:45:58 by vs            #+#    #+#                 */
-/*   Updated: 2025/11/30 13:12:13 by vsudak        ########   odam.nl         */
+/*   Updated: 2025/11/30 13:13:02 by vsudak        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strjoin(char *s1, const char *s2)
 {
@@ -60,44 +60,6 @@ char	*join_help(char *s1, const char *s2, size_t len1, size_t len2)
 		free(s1);
 	return (result);
 }
-
-// char	*ft_strjoin(char *s1, const char *s2)
-// {
-// 		size_t	len_s;
-// 		size_t	i;
-// 		char	*d;
-// 		size_t	k;
-
-// 		if (s1 == NULL)
-// 			i = 1;
-// 		else
-// 			i = ft_strlen(s1) + 1;
-// 		if (s2 == NULL)
-// 			len_s = i;
-// 		else
-// 			len_s = i + ft_strlen(s2);
-// 		d = malloc(len_s);
-// 		if (!d)
-// 		{
-// 			free(s1);
-// 			return (NULL);
-// 		}
-// 		i = 0;
-// 		while (s1[i] != '\0' && s1)
-// 		{
-// 			d[i] = s1[i];
-// 			i++;
-// 		}
-// 		k = 0;
-// 		while (s2[k] != '\0')
-// 		{
-// 			d[i + k] = s2[k];
-// 			k++;
-// 		}
-// 		d[i + k] = 0;
-// 		free(s1);
-// 		return (d);
-// }
 
 size_t	ft_strlen(const char *c)
 {
